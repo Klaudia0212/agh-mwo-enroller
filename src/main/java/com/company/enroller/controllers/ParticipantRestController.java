@@ -19,9 +19,15 @@ public class ParticipantRestController {
 	ParticipantService participantService;
 
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	public ResponseEntity<?> getParticipants() {
-		Collection<Participant> participants = participantService.getAll();
-		return new ResponseEntity<Collection<Participant>>(participants, HttpStatus.OK);
+    public ResponseEntity<?> getParticipants(
+            @RequestParam(value = "key", defaultValue = "") String key,
+            @RequestParam(value = "sortBy", defaultValue = "") String sortBy,
+            @RequestParam(value = "sortOrder", defaultValue = "ASC") String sortOrder
+    ) {
+        Collection<Participant> participants =
+                participantService.getAll(key, sortBy, sortOrder);
+
+        return new ResponseEntity<Collection<Participant>>(participants, HttpStatus.OK);
 	}
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -66,15 +72,4 @@ public class ParticipantRestController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-//   @RequestMapping(value = "/participants?sortBy=login&sortOrder=DESC", method = RequestMethod.GET)
-//    public ResponseEntity<?> sortDescParticipant(Collection<Participant> participants) {
-//        participantService.sortDesc(participants);
-//        return new ResponseEntity<Collection<Participant>>(participants, HttpStatus.OK);
-//    }
-//
-//    @RequestMapping(value = "/participants?sortBy=login&sortOrder=ASC", method = RequestMethod.GET)
-//    public ResponseEntity<?> sortAscParticipant(Collection<Participant> participants) {
-//        participantService.sortAsc(participants);
-//        return new ResponseEntity<Collection<Participant>>(participants, HttpStatus.OK);
-//    }
 }

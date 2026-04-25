@@ -42,11 +42,16 @@ public class ParticipantRestControllerTest {
 		participant.setLogin("testlogin");
 		participant.setPassword("testpassword");
 
-		Collection<Participant> allParticipants = singletonList(participant);
-		given(participantService.getAll()).willReturn(allParticipants);
+        Collection<Participant> allParticipants = singletonList(participant);
 
-		mvc.perform(get("/participants").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andExpect(jsonPath("$", hasSize(1))).andExpect(jsonPath("$[0].login", is(participant.getLogin())));
+        given(participantService.getAll("", "", "ASC"))
+                .willReturn(allParticipants);
+
+        mvc.perform(get("/participants")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].login", is(participant.getLogin())));
 	}
 
 }
