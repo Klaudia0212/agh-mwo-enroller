@@ -18,10 +18,21 @@ public class MeetingService {
 		connector = DatabaseConnector.getInstance();
 	}
 
-	public Collection<Meeting> getAll() {
-		String hql = "FROM Meeting";
-		Query query = connector.getSession().createQuery(hql);
-		return query.list();
+	public Collection<Meeting> getAll(String key, String sortMode, String sortOrder) {
+		String hql = "FROM Meeting WHERE title LIKE :title";
+
+        if ("title".equals(sortMode)) {
+            hql += " ORDER BY title";
+
+            if ("DESC".equals(sortOrder)) {
+                hql += " DESC";
+            } else {
+                hql += " ASC";
+            }
+        }
+        Query query = connector.getSession().createQuery(hql);
+        query.setParameter("title", "%" + key + "%");
+        return query.list();
 	}
 
     public Meeting findById(long id){

@@ -1,7 +1,9 @@
 package com.company.enroller.controllers;
 
 import com.company.enroller.model.Meeting;
+import com.company.enroller.model.Participant;
 import com.company.enroller.persistence.MeetingService;
+import com.company.enroller.persistence.ParticipantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +17,18 @@ public class MeetingRestController {
 
     @Autowired
     MeetingService meetingService;
+    @Autowired
+    ParticipantService participantService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity<?> getMeetings() {
-        Collection<Meeting> meetings = meetingService.getAll();
+    public ResponseEntity<?> getMeetings(
+            @RequestParam(value = "key", defaultValue = "") String key,
+            @RequestParam(value = "sortBy", defaultValue = "") String sortBy,
+            @RequestParam(value = "sortOrder", defaultValue = "ASC") String sortOrder
+    ) {
+        Collection<Meeting> meetings =
+                meetingService.getAll(key, sortBy, sortOrder);
+
         return new ResponseEntity<Collection<Meeting>>(meetings, HttpStatus.OK);
     }
 
